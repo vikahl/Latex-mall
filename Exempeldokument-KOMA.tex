@@ -1,0 +1,482 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%	Mall för enklare LaTeX-dokument
+%	Skriven av Viktor Ahlqvist
+%	http://www.texempelvis.se
+%
+%	Tänkt att användas tillsammans med LuaTeX, men bör fungera även i XeTeX
+%
+%	Notera att jag inte beskriver alla inställningar som finns till paketen, det
+%	är alltid en bra ide att läsa paketens manualer för att få reda på vilka 
+%	andra inställningar som finns. Manualerna finns dels på CTAN
+%	(http://www.ctan.net) eller via `texdoc` om TeX Live är installerat.
+%
+%	Exempeltext är taget ifrån August Strindbergs Röda rummet, som inte längre
+%	omfattas av upphovsrätt utan är allmängods.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Nag är ett paket som bör stå överst i alla dokument. Det tillför inga nya
+% funktioner, men skriver varningar om man använder gamla, utdaterade,
+% kommandon.
+\RequirePackage[l2tabu, orthodox]{nag}
+
+% KOMA-Script är en samling klasser och paket som syftar att ersätta LaTeX
+% standardklasser. Förutom att vara snyggare så är de även mer anpassade till
+% europeiska konventioner, bland annat så är a4-papper standard.
+% 
+%	scrartcl motsvarar LaTeXs article-klass
+%	scrbook motsvarar book
+%	scrreprt motsvarar report
+%
+% Mer information om vad som skiljer klasserna åt finns att läsa manualen på
+% http://mirrors.ctan.org/macros/latex/contrib/koma-script/doc/scrguien.pdf
+% Inställningarna till KOMA-Script klasserna kan antingen skickas som 
+% alternativa argument i \documentclass eller via funktionen \KOMAoptions.
+% Vissa argument bör dock skickas via \documentclass.
+\documentclass[%
+	%paper=a5,pagesize % Om man vill använda ett annat pappersformat än A4 måste
+					% man givetvis säga till om det. pagesize bör användas om 
+					% man ändrar pappersstorleken, se sida 43 i manualen.
+	%parskip=full,	% Standard i LaTeX är att avgränsa paragrafer med ett indrag
+					% Ibland vill man ha mellanrum istället, och det gör parskip
+	%twoside,		% Ger dubbelsidigt dokument med alternerande marginaler o.d.
+	%twocolumn,		% Ger dokument med två kolumner.	
+	]{scrartcl}
+
+% Graphicx är det utökade grafikpaketet från 'graphics bundle'. Lägger till
+% en uppsjö kommandon kopplade till importerad grafik, skalning och annat.
+\usepackage{graphicx}
+
+% amsmath är en samling nästan nödvändiga paket för att typsätta matematik.
+% Här väljer vi dessutom
+% tbtags som innebär att för delade ekvationer så placeras numreringen i höjd 
+% med sista raden om ekvationsnumren är på höger sida och första raden om numren
+% är på vänster sida.
+% intlimits som säger att gränserna i integraler ska visas ovanför och under 
+% integraltecknet och inte vid sidan om som annars är standrd. Tar lite mer 
+% plats i höjdled, men är betydligt snyggare tycker jag.
+\usepackage[tbtags,intlimits]{amsmath}
+
+% scrpage2 är en del av KOMA-Script paketet och lägger till enklare och bättre
+% möjligheter att justera sidhuvuden och -fötter.
+\usepackage{scrpage2}
+
+% Polyglossia är ett paket som lägger till flerspråksstöd i LaTeX. Genom att 
+% ladda ett språk i Polyglossia får man dels avstavning för det aktuella 
+% språket, dels översättning av rubriker till innehållsförteckning, datum och 
+% liknande "standardtext" som skrivs ut av LaTeX.
+\usepackage{polyglossia}
+% När man har laddat Polyglossia får man dessutom ställa in standardspråket den 
+% ska använda i dokumentet. Här väljer vi svenska som huvudspråk och anger 
+% dessutom att vi vill ladda brittisk engelska som alternativt språk.
+% Engelskan kan sedan användas med \textenglish{This text is in English} eller 
+% med \begin{english}This whole section is in English!\end{english}
+% Fullständig lista över språk och kommandon för Polyglossia finns i manualen.
+\setdefaultlanguage{swedish}
+\setotherlanguage[variant=uk]{english}
+
+%%% Typsnitt %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Det är egentligen inget fel med typsnittet Computer Modern som är standard i 
+% LaTeX, men jag tycker personligen inte om det och det, speciellt inte den
+% kursiva stilen. Dessutom
+% Istället förordar jag typsnittet Linux Libertine, som inte bara är gratis utan
+% dessutom öppen källkod. Innehåller i stort sett alla stilar och varianter man
+% kan behöva.
+\usepackage{libertine}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Unicode-math, som bara fungerar på LuaTeX och XeTeX är ett paket för att ge
+% fullt unicode-stöd i matteläget och även göra det lätt att byta typsnitt.
+% Bifogat manualen finns en lång lista över alla tecknen i unicode och hur man 
+% infogar dessa på ett lätt sätt. Filen heter unicode-symbols.pdf.
+% Unicode-math ändrar dessutom på vissa underligheter hos LaTeX, tex att \bm 
+% används för en "bold symbol" medan \mathbf används om det är feta bokstäver 
+% man vill åt. Unicode-math ordnar så att \mathbf kan användas för både latinska
+% och grekiska bokstäver.
+% 
+% Jag har även några inställningar som ändrar beteendet hos TeX
+%	math-style=ISO	Som standard så använder TeX kursiva gemena grekiska 
+%					bokstäver och raka versala sådana. Detta stämmer dåligt 
+%					överrens med ISO-standarder som säger att variabler alltid 
+%					ska vara kursiva. Den här inställningen ändrar så att både
+%					versaler och gemener är kursiva.
+%	bold-style=ISO	Även här så stämmer inte TeX:s standardbeteende överrens med
+%					ISO:s standarder. TeX tycker nämligen om att göra feta 
+%					versaler i en rak stil, vilket även det motsäger 
+%					konventionen att variabler skrivs kursivt. bold-style=ISO
+%					gör att de feta glyferna från \mathbf fortfarande är 
+%					kursiva.
+%	vargreek-shape=unicode	Det finns två olika gemena versioner av de grekiska 
+%					bokstäverna epsilon och phi. TeX definerar \epsilon och 
+%					\varepsilon för att komma åt de två olika varianterna. 
+%					TeX:s definition är dock omvänd mot hur dessa symboler är 
+%					ordnade i Unicode. Då jag personligen tycker att de 
+%					symboler som TeX tycker är varianten är betydligt snyggare 
+%					gör den här inställningen att jag slipper använda \varphi 
+%					och det dessutom blir mer logiskt för alla som inte är vana 
+%					vid TeX.
+\usepackage[math-style=ISO,bold-style=ISO,vargreek-shape=unicode]{unicode-math}
+% Personligen tycker jag att TeX Gyre Pagella är ett trevligt typsnitt för 
+% matematik. Det behöver inte stå en sökväg till en fil, utan om typsnittet är 
+% installerat på datorn räcker det med att skriva namnet, exempelvis 
+% \setmathfont{Asana Math}. Det går dessutom att använda olika typsnitt för 
+% olika delar (t.ex. ett bara för grekiska bokstäver), och detta förklaras i 
+% unicode-math:s manual.
+% \setmathfont{texgyrepagellamath-regular.otf}
+\setmathfont{Asana Math}
+
+% Microtype, "Subliminal refinements towards typographical perfection", är ett
+% paket som lägger till stöd för de mikrotypografiska verktyg som pdfTeX
+% ursprungligen introducerade, bl.a. 'character protusion' och 'font expansion'.
+% (jag vet inte om det finns några svenska termer på detta). Kortfattat så får
+% den dokumenten att se snyggare ut genom att göra väldigt små typografiska 
+% ändringar. Vi ställer inte in några speciella inställningar utan låter 
+% microtype lösa det på bästa sätt. Manualen beskriver dock många funktioner man
+% kan finjustera om man vill.
+\usepackage{microtype}
+
+% I engelska används punkt som decimalavskiljare och kommatecken för att 
+% separera element i listor. Som standard kan alltså kommatecknet inte användas 
+% som decimalavskiljare, eftersom mellanrummen blir felaktiga. Icomma löser 
+% detta på magiskt sätt med sina 13 rader kod. Om man skriver text på engelska 
+% eller använder punkt som avskiljare finns det ingen anledning att ladda 
+% paketet och det kan alltså kommenteras bort.
+\usepackage{icomma}
+
+% siunitx är ett av mina favoritpaket. Paketets syfte är dels att erbjuda 
+% möjligheter till att typsätta enheter, men även kommandot \num för att 
+% formatera tal. Manualen rekommenderas verkligen för att förstå alla 
+% användbara funktioner (t.ex. avrundning, exponentnotifikation et.c.)
+\usepackage{siunitx}
+% Istället för att skicka in inställningarna som argument till \usepackage,
+% vilket ger samma resultat, används \sisetup (mest för att formatera 
+% kommentarer på ett enklare sätt). \sisetup kan dock användas i själva 
+% dokumentet för att ändra utskriften för en specifik del och de flesta 
+% inställningarna kan även ske individuellt, t.ex. 
+% \num[output-complex-root=i]{4+10j}
+% Det finns som sagt mängder av inställningar, det här är bara några få. Se 
+% till att läsa manualen!
+\sisetup{%
+	free-standing-units,		% Gör att enheterna från siunitx kan användas 
+								% även utanför \SI och \si. Framförallt 
+								% användbart för procent, men det kan även vara 
+								% trevligt att kunna skriva \metre på 
+								% godtyckligt ställe i rapporten.
+	exponent-product = \cdot,	% I sverige (och europa?) är det vanligast att 
+								% använda en centrerad punkt som 
+								% multiplikationssymbol.
+    output-decimal-marker={,},	% Kommatecken som decimalavdelare i det 
+								% utskrivna talet. Föredras punkt kan raden tas 
+								% bort eller tecknet bytas ut.
+	output-complex-root = j,	% Om man är elektroteknolog använder man 
+								% såklart j istället för i för att representera 
+								% roten ur -1. Man kan t.ex. använda 
+								% copy-complex-root istället för att få samma 
+								% utskrift som man skrivit in i texten.
+	complex-root-position = before-number, % Komplexa tal kan antingen skrivas
+								% 5+j2 eller 5+2j. Jag föredrar den första 
+								% notationen.
+	per-mode=symbol,			% Newton per meter kan antingen skrivas N/m 
+								% eller Nm^-1. Jag föredrar det första 
+								% skrivsättet.
+	group-digits=integer,		% Det är vanligt att gruppera tal tre och tre
+								% för att förenkla läsandet. Kommandot gör att 
+								% så sker, men bara för heltalsdelen.
+	group-minimum-digits=4,		% Minsta antalet siffror som krävs för att det 
+								% ska grupperas. 4 siffor = tusental.
+	group-separator = {\,},		% Styr vilken avgränsare som ska användas vid 
+								% grupperingen. Svenska skrivregler (och 
+								% ISO-standarder) förespråkar ett 
+								% åttondelsfyrkantsmellanrum (thin space).
+%	detect-all,					% En inställning som jag inte brukar använda, 
+								% men som är vanlig är huruvida siunitx ska 
+								% anpassa sin utskrift efter omgivande typsnitt 
+								% och inställningar. Standard är att inte bry 
+								% sig om det, detect-all medför att den 
+								% anpassar allt. Finns fler inställningar som 
+								% står i manualen.
+	detect-display-math,		% Gör att siunitx känner av om den är i 
+								% matteläge och använder dess typsnitt.
+	separate-uncertainty = true,% Om talen är angivna med osäkerhet kan man
+								% antingen skriva ut det som talet +- 
+								% osäkerheten eller med de osäkra siffrorna i 
+								% parantes. Kommandot växlar till +- osäkerhet.	
+}
+% Vad följande rad gör tänker jag inte förklara men hade du läst manualen till 
+% siunitx hade det inte varit något problem alls.
+% \SI[parse-number = false]{\sqrt{3}}{\metre}
+
+% Tabular, "standardsättet" att göra tabeller har sina begränsningar. Exempelvis
+% kan inte tabeller brytas över flera sidor vilket blir ett stort problem vid 
+% långa tabeller. Paketet longtable lägger miljön longtable 
+% (\begin{longtable}...\end{longtable}) som bland annat gör sidbrytningar, men
+% har även flera andra användbara funktioner.
+\usepackage{longtable}
+
+% När det ändå pratas om tabeller måste man nästan nämna booktabs, paketet som
+% hjälper till att göra tabeller snyggare med en samling användbara kommandon 
+% och ordnar avstånd till linjer på ett bra sätt.
+% Manualen är dessutom nästan en guide med vad man ska tänka på och hur man ska
+% utforma tabeller i sina rapporter.
+% Orkar du inte läsa manualen är dock följande två regler det viktigaste
+% 1. Never, ever use vertical rules.
+% 2. Never use double rules.
+\usepackage{booktabs}
+
+% Paketet wrapfig lägger till miljön wrapfigure och wraptable för att få text
+% att flyta runt en bild. Mer tänker jag inte skriva utan hänvisar till manualen
+% som beskriver dels syntaxen, dels saker man ska tänka på.
+%\usepackage{wrapfig}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Här var det nästan slut på laddning av paket och vi börjar istället göra lite
+% andra iställningar och definitioner.
+
+% KOMA-Script lägger till en del egna kommandon för att styra bl.a. typsnitt.
+% Jag tycker att KOMAS standardutseendet på rubriker inte är särskilt snyggt,
+% men som tur är kan de bytas på ett enkelt sätt.
+% disposition byter utseende på alla sektionstitlar, från \part ner till 
+% \subparagraph. Vill man bara byta typsnitt i \section kan man skriva t.ex. 
+% skriva \setkomafont{section}{\sffamily}.
+\setkomafont{disposition}{\sffamily}
+% Man kan även byta utseende på sidhuvud och sitfot. Jag tycker om att skriva 
+% texten i sidhuvudet med kapitäler och sidfoten med vanlig text, vilket 
+% följande två rader gör.
+\setkomafont{pagehead}{\normalfont\scshape}
+\setkomafont{pagefoot}{\normalfont}
+
+% Jag tycker mer om punkt som multiplikationssymbol istället för det kryss som
+% är standard i LaTeX. För att ändå göra det tydligt vad jag menar när jag 
+% skriver i matematikläget så brukar jag sonika definera om \times
+% unicode-math gör något lurigt så omdefinitionen måste ske efter 
+% \begin{document}, men lyckligtvis finns det ett Latex-kommando för just detta.
+\AtBeginDocument{\let\times\cdot}
+
+% Det är en bra ide att definera egna kommandon för t.ex. formattering och 
+% styra utseendet på ett ställe istället för att hårdkoda in formattering i 
+% texten.
+% Nedanstående är exempel på kommandon som jag brukar använda. Det översta,
+% \acr är en förkortning för acronym och jag brukar använda det för 
+% förkortningar. Det kan ibland hända att man vill använda 'riktiga' versaler 
+% för förkortningar istället för kapitäler, och då är det enkelt att bara byta 
+% en rad på ett ställe
+% Ger kapitäler. Precis som alltid så kommer versaler som skrivs in skrivas ut
+% som versaler. \acr{Abb} kommer alltså ge versalt 'A' och 'bb' som kapitäler.
+\newcommand*{\acr}[1]{\textsc{#1}}
+% Här är en variant som först konverterar texten till gemener, vilket betyder
+% att i Abb kommer alla bokstäver skrivas ut som kapitäler.
+%\newcommand{\acr}[1]{\textsc{\MakeLowercase{#1}}}
+% Och sist är en variant för om man hellre vill använda 'riktiga' versaler.
+%\newcommand{\acr}[1]{\MakeUppercase{#1}}
+% Ovanstående är bara exempel på varför det är så praktiskt att beskriva vad
+% man menar i texten istället för att detaljstyra utseende.
+
+% Enligt ISO:s standarder ska d:et i d/dx eller dx i en integral skrivas med 
+% upprätt stil och inte med kursiv, som blir fallet om man bara skriver ett
+% d i filen. Följande kommando är ett exempel på hur man kan ordna det.
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% Vektorer kan skrivas på många olika sätt, standard i TeX är att skriva de med
+% en lite pul över bokstaven. Jag föredrar att istället skriva med feta 
+% bokstäver och definerar därför om \vec till en bättre definition.
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}}
+
+% Ett annat exempel på kommando man kan vilja definera själv är ett alternativ
+% till +- symbolen. Ofta vill man göra en liten parantes runt t.ex. minustecknet
+% om den lösningen inte är möjlig. Följande två kommandon lägger till dels 
+% \varpm och \varmp.
+\newcommand\varpm{\mathbin{\vcenter{\hbox{%
+  \oalign{\hfil$\scriptstyle+$\hfil\cr
+          \noalign{\kern-.3ex}
+          $\scriptscriptstyle({-})$\cr}%
+}}}}
+\newcommand\varmp{\mathbin{\vcenter{\hbox{%
+  \oalign{$\scriptstyle({+})$\cr
+          \noalign{\kern-.3ex}
+          \hfil$\scriptscriptstyle-$\hfil\cr}%
+}}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nu ska den metadata som  behövs fyllas i. \title, \author och \date är 
+% klassiska LaTeX-kommandon och skrivs ut i dokumentet av \maketitle.
+% KOMA-Script lägger dessutom till en del ytterligare kommandon
+% \titlehead	Som skrivs ut längst upp på titelsidan
+% \subject		Som skrivs ut direkt ovanför \title
+% \subtitle		Som skrivs ut under \title
+% \publishers	Som skrivs ut sist. Det här kommandot kan givetvis användas
+%				till annan text än just publicent. 
+% \thanks		Som används för fotnoter kopplat mot författarna (är dock ett
+%				standard-LaTeX-kommando).
+
+% Titeln på dokumentet, inte särskilt svårt alls.
+\title{Röda rummet}
+\subtitle{Skildringar ur artist-- och författarlivet}
+% Författare ska separeras med \and för att utseendet ska bli rätt.
+\author{August Strindberg\thanks{Vill säkert tacka Siri von Essen} \and Viktor Ahlqvist\thanks{Som på något sätt vill få lite ära för det här dokumentet i alla fall}}
+% Och som vanligt gäller att om \date utelämnas används dagens datum.
+
+% Sidhuvuden och -fötter sätts automatiskt, men det är inte alltid man vill ha
+% det utseendet. Paketet scrpage2 som laddades ovan ger bra möjligheter att 
+% styra innehållet själv.
+%
+% Rensar sidhuvud och fot, är bra om vi vill byta ut all information i dessa.
+\clearscrheadfoot
+% \ofoot, outside foot. I ett enkelsidigt dokument blir det alltid högsida, men 
+% i ett dubbelsidigt kommer detta givetvis växla.
+% Det valfria argumentet [\pagemark] är det som används vid scrpage2:s 
+% 'plain'-stil, som används på bl.a. titelsidan (där man ofta inte vill ha 
+% sidhuvud).
+\ofoot[\pagemark]{\pagemark}
+% \ihead Inside head. De andra två sektionerna är alltså \chead och \ohead.
+\ihead{exempelmall i latex}
+\ohead{viktor ahlqvist}
+
+% LaTeX måste få veta vilken stil den ska använda. Kan antingen sättas här i 
+% preamble:n eller i dokumentet (och kan även ändras i olika delar av 
+% dokumentet).
+\pagestyle{scrheadings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ett sista paket ska dock laddas innan vi börjar skriva på dokumentet. 
+% hyperref är ett paket som lägger till möjligheten till interna och externa 
+% länkar i pdf-dokumenten. Som standard gör den t.ex. innehållsförteckningen 
+% till länkar. Har över 100 inställningar som alla givetvis står i manualen.
+%
+% hyperref behöver veta vilka andra paket som är laddade och det är därför 
+% viktigt att det laddas sist. Det finns vissa program som ska laddas efteråt, 
+% men det är få och det brukar i så fall stå i deras dokumentation.
+% 'hidelinks' gör att länkarna i dokumentet inte markeras på något speciellt
+% sätt. Personligen tycker att det är störande när länkar skrivs i en annan 
+% färg, men det gör det samtidigt tydligare att det är länkar.
+\usepackage[hidelinks]{hyperref}
+%
+% Hyperref ger även möjligheten att sätta pdf-metadata, vilket är användbart 
+% speciellt om filen ska skickas till någon databas. Nedanstående kod fyller i
+% den titel och författare som sattes ovan. Då dessa kommandon är 'skyddade' 
+% med @ för att bara kunna ändras i dokumentklassen behöver vi byta funktion på 
+% @ med \makeatletter.
+\let\oand\and
+\def\and{, }
+\makeatletter
+\hypersetup{
+  unicode,					% För att få unicode-kodade pdfsträngar.
+  breaklinks,				% Tillåter att länkar radbryts.
+  pdfauthor = {\@author},	% Sätter författare på dokumentet.
+  pdftitle = {\@title},		% Sätter titel på dokumentet
+  pdfsubject = {\@title},	% Ämne  
+}
+\makeatother
+\let\and\oand
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Här börjar det faktiska innehållet till dokumentet.
+\begin{document}
+\maketitle 			% Skriver ut titeldatan
+\tableofcontents	% Skriver ut innehållsförteckning
+
+\section{Stockholm i fågelperspektiv}
+Det var en afton i början av maj. Den lilla trädgården på Mosebackehade ännu 
+icke blivit öppnad för allmänheten och rabatterna voro ej uppgrävda; 
+snödropparne hade arbetat sig upp genom fjolårets lövsamlingar och höllo just 
+på att sluta sin korta verksamhet för att lämna plats åt de ömtåligare 
+saffransblommorna, vilka tagit skydd under ett ofruktsamt päronträd; syrenerna 
+väntade på sydlig vind för att få gå i blom, men lindarne bjödo ännu 
+kärleksfilter i sinao brustna knoppar åt bofinkarne, som börjat bygga sina 
+lavklädda bon mellan stam och gren; ännu hade ingen mänskofot trampat 
+sandgångarne sedan sista vinterns snö gått bort och därför levdes ett obesvärat 
+liv därinne av både djur och blommor. Gråsparvarne höllo på att samla uppskräp, 
+som de sedan gömde under takpannorna på navigationsskolans hus; de drogos om 
+spillror av rakethylsor från sista höstfyrverkeriet, de plockade halmen från 
+unga träd som året förut sluppit ur skolan på Rosendal -- och allting sågo de! 
+De hittade barège-lappar i bersåer och kunde mellan stickorna på en bänkfot 
+draga fram hårtappar efter hundar, som icke slagits där sedan Josefinadagen i 
+fjor. Där var ett liv och ett kiv.
+
+\section{Bröder emellan}
+Linkramhandlaren Carl Nicolaus Falk, son till avlidne linkramhandlaren, en av 
+Borgerskapets femtio äldste och kaptenen vidBorgerskapets infanteri, Kyrkorådet 
+och Ledamoten av direktionen förStockholms Stads Brandförsäkringskontor Herr 
+Carl Johan Falk -- och bror till förre e.o. notarien numera litteratören Arvid 
+Falk, hade sin affär, eller, som hans ovänner helst kallade den, bod, vid 
+Österlånggatan, så snett emot Ferkens gränd, att bodbetjänten kunde,när han 
+tittade upp från sin roman, som han satt och fuskade med under disken, se ett 
+stycke av en ångbåt, ett hjulhus, en klyvarbom eller så, och en trätopp på 
+Skeppsholmen samt en bit luft ovanför. Bodbetjänten som lydde det icke ovanliga 
+namnet Andersson,och han hade lärt lyda, hade nu på morgonen öppnat, hängt ut 
+en lintott, en ryssja, en ålmjärde, en knippa metspön samt en katseospritad 
+fjäder; därpå hade han sopat boden, och strött sågspån på golvet samt slagit 
+sig ner bakom disken, där han av en tom ljuslåda tillrett en slags råttfälla 
+som han gillrat upp med en stångkrok och i vilken hans roman ögonblickligen 
+kunde falla, om patron eller någon av dennes bekanta skulle inträda. Några 
+kunder tycktes han ej befara, dels emedan det var tidigt på morgonen, dels 
+emedan han icke var van vid överflöd på sådana. Affären hade blivit grundlagd 
+under Salig Kung Fredriks dagar -- Carl Nicolaus Falk hade liksom allt annat 
+även ärvt detta uttryck från sin far, vilken åter fått det i rätt nedstigande 
+linje från sin farfar -- den hade blomstrat och givit ifrån sig bra med pengar 
+förr, ända till för några år sedan, då det olycksaliga 
+``representationsförslaget'' kom och gjorde slut på all handel,förstörde alla 
+utsikter, hämmade all företagsamhet och hotade att bringa Borgerskapet till 
+undergång. Så uppgav Falk själv, men andra menade att affären icke sköttes och 
+att en svår konkurrent etablerat sig nere vid slussplan. Falk talade dock icke 
+i onödan om affärens lägervall och han var en tillräckligt klok man att välja 
+både tillfälle och åhörare när han slog an den strängen. När någon av hans 
+gamla affärsvänner framställde en vänlig förundran över den minskade trafiken, 
+då talade han om, att han byggde på sin partihandel på landsorten och bara hade 
+boden som en skylt, och de trodde honom, ty han hade ett litet kontor innanför 
+boden, där han mest vistades, närhan icke var ute i stan eller på Börsen. Men 
+när hans bekanta -- det var något annat det -- det var notarien och magistern 
+-- yttrade samma vänliga oro -- då var det de dåliga tiderna, härledande sig 
+från representationsförslaget - som vållade stagnationen.
+
+Emellertid hade Andersson, vilken blivit störd av några pojkar som i dörren 
+frågat vad metspöna kostat, råkat att titta ut åt gatan och fått sikte på unge 
+herr Arvid Falk. Som han fått låna boken av just honom fick den bli liggande 
+där den låg och det var med en ton av förtrolighet och en min av hemligt 
+förstånd han hälsade sin förre lekkamrat då denne inträdde i boden.\\
+
+
+\noindent -- Är han där uppe? frågade Falk med en viss oro.\\
+-- Han håller på att lösa följande problem sa Andersson, ty han hade insett att 
+från kortslutningsprovets data kan $X_k$ och $R_k$ bestämmas.
+\begin{gather*}
+	I_k = I_{N1} = \frac{S_N}{\sqrt{3} U_{N1}} = \SI{10,94}{A}\\
+	R_k = \frac{P_k}{3I_k^{\phantom{k}2}} = \SI{3,70}{\ohm/fas}\\
+	X_k = \sqrt{Z_k^{\phantom{k}2} - R_k^{\phantom{k}2}} = \left\{ Z_k =
+	\frac{U_{k}}{\sqrt{3}I_k} \right\} = \SI{15,94}{\ohm/fas}
+	\intertext{Spänningsfallet $\upDelta  U$ kan nu beräknas för att sedan 
+	användas för att beräkna $U_2$. Om spänningsfallet är litet kan 
+	$\vec{U}_{\mathrm{tvärf}}$ försummas.}
+	\upDelta  U = \sqrt{3}I_2^{\,\prime} \left( R_k \cos{\phi} + X_k \cos{\phi} 
+	\right) = 1,32I_2\si{V}\\
+	\implies U_2 = \frac{U_{N1} - \upDelta  U}{\frac{6600}{400}} = 
+	\left(400-0,08I_2\right)\si{V}
+	\intertext{Kopparförlusterna $P_{\mathrm{Cu}}$ beräknas och används sedan 
+	för att beräkna den inmatade effekten.}
+	P_{\mathrm{Cu}} = 3R_k \left( I_2^{\,\prime}\right)^2\\
+	P_{\mathrm{1}} = P_{\mathrm{Cu}} + P_0 + P_2 = \left\{ P_2 = \sqrt{3} U_2 
+	I_2 \cos{\phi} \right\} = \left(-0,07I_2^{\phantom{2}2} + 554,26I_2 + 
+	1050\right)\si{W}
+	\intertext{Verkningsgraden $\eta$ definieras som kvoten mellan uttagen 
+	effekt och inmatad effekt.}
+	\eta = \frac{P_2}{P_1} = 
+	\frac{-0,11I_2^{\phantom{2}2}+554,26I_2}{-0,07I_2^{\phantom{2}2} + 
+	554,26I_2 + 1050}
+	\intertext{Den maximala verkningsgraden fås genom att derivera $\eta$ och 
+	sedan lösa ut $I_2$.}
+	0 = \frac{\diff \eta}{\diff I_2} = \frac{-22,1704 I_2^{\phantom{2}2} - 
+	231I_2 + 581 973}{\left(-0,07I_2^{\phantom{2}2} +554,26I_2 +1050 
+	\right)^2}\\
+	\implies I_2 = \frac{25\left(-825 \varpm 
+	\sqrt{\num{658975227}}\right)}{3959} = \SI{156,89}{A}
+	 \intertext{Med $I_2$ känd kan den maximala verkningsgraden bestämmas.}
+	 \eta_{\mathrm{max}} = 
+	 \frac{-0,11\times156,89^2+554,26\times156,89}{-0,07\times156,89^2 + 
+	 554,26\times156,89 + 1050} = 0,98
+	 \intertext{Den uttagna aktiva effekten vid $\eta_{\mathrm{max}}$ kan nu 
+	 beräknas.}
+	 P_{2\eta} = -0,11\times156,89^2+554,26\times156,89 = \SI{84,25}{kW}
+\end{gather*}
+
+\end{document}
