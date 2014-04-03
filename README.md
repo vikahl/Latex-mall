@@ -1,9 +1,13 @@
 # En LaTeX-mall
 
-# Ej aktuell, mallen håller på att uppdateras!
-
 Efter att blivit tillfrågad flera gånger om jag hade någon lämplig LaTeX-mall att utgå ifrån och efter att mallen jag brukade använda blivit hopplöst utdaterad så bestämde jag mig för att göra en mall där jag ansträngde mig lite mer med att kommentera de olika paketen och inställningarna samt att använda versionshantering.
 Det är inte ett dokument som försöker vara täcka alla möjliga kombinationer, utan snarare ett enkelt dokument man kan utgå ifrån när man ska skriva inlämningar eller liknande.
+
+Repositoryn innehåller tre mallar:
+
+* Exempeldokument-minimal, ett minimalt dokument med bara det man ”måste” ha
+* Exempeldokument-article, ett större dokument med alla filer man bör ha
+* Exempeldokument-KOMA, ett större dokument som använder KOMA-Script klasserna. Inte klart än.
 
 ## Kompatibilitet
 
