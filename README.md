@@ -1,3 +1,5 @@
+Den här mallen är arkiverad, kommer inte längre att uppdateras och eventuella användare bör kontrollera och reflektera om det finns bättre paket eller inställningar för att lösa problemen.
+
 # En LaTeX-mall
 
 Efter att blivit tillfrågad flera gånger om jag hade någon lämplig LaTeX-mall att utgå ifrån och efter att mallen jag brukade använda blivit hopplöst utdaterad så bestämde jag mig för att göra en mall där jag ansträngde mig lite mer med att kommentera de olika paketen och inställningarna samt att använda versionshantering.
